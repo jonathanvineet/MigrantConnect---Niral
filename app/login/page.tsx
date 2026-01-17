@@ -45,6 +45,13 @@ export default function LoginPage() {
   }
 
   const submitOtp = () => {
+    // Fallback authentication for testing
+    if (aadhaarNumber === "123412341234" && otp === "1234") {
+      setIsAadhaarVerified(true)
+      setIsVerifyingAadhaar(false)
+      return
+    }
+    
     // Simulate OTP verification
     if (otp.length === 6) {
       setIsAadhaarVerified(true)
@@ -53,6 +60,16 @@ export default function LoginPage() {
   }
 
   const handleLogin = (type: string) => {
+    // Fallback authentication for testing
+    if (aadhaarNumber === "123412341234" && otp === "1234") {
+      if (type === "worker") {
+        router.push("/dashboard")
+      } else {
+        router.push("/employer/dashboard")
+      }
+      return
+    }
+    
     // In a real app, you would validate and authenticate here
     if (type === "worker") {
       router.push("/dashboard")
@@ -141,7 +158,7 @@ export default function LoginPage() {
                 <Button
                   className="w-full"
                   onClick={() => handleLogin("worker")}
-                  disabled={!isAadhaarVerified || otp.length < 6}
+                  disabled={!isAadhaarVerified || (otp.length < 4 || (aadhaarNumber !== "123412341234" && otp.length < 6))}
                 >
                   Login
                 </Button>
@@ -207,7 +224,7 @@ export default function LoginPage() {
                 <Button
                   className="w-full"
                   onClick={() => handleLogin("employer")}
-                  disabled={!isAadhaarVerified || otp.length < 6}
+                  disabled={!isAadhaarVerified || (otp.length < 4 || (aadhaarNumber !== "123412341234" && otp.length < 6))}
                 >
                   Login
                 </Button>
@@ -250,7 +267,7 @@ export default function LoginPage() {
             <Button variant="outline" onClick={() => setIsVerifyingAadhaar(false)}>
               Cancel
             </Button>
-            <Button onClick={submitOtp} disabled={otp.length !== 6}>
+            <Button onClick={submitOtp} disabled={otp.length < 4 || (aadhaarNumber !== "123412341234" && otp.length !== 6)}>
               Verify OTP
             </Button>
           </DialogFooter>

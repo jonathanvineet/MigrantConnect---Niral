@@ -143,6 +143,11 @@ export interface SidebarMenuButtonProps
 export const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
   ({ className, isActive, asChild = false, ...props }, ref) => {
     const Comp = asChild ? React.Fragment : "button"
+    
+    if (asChild) {
+      return <Comp>{props.children}</Comp>
+    }
+    
     return <Comp ref={ref} className={cn(sidebarMenuButtonVariants({ isActive, className }))} {...props} />
   },
 )
